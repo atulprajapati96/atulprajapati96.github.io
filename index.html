@@ -1,1038 +1,1089 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Atul Prajapati | Astroparticle Physics</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg: #03050f;
-  --surface: rgba(255,255,255,0.04);
-  --surface-hover: rgba(255,255,255,0.07);
-  --border: rgba(255,255,255,0.08);
-  --border-bright: rgba(109,229,255,0.4);
-  --primary: #6de5ff;
-  --secondary: #a78bfa;
-  --accent: #f472b6;
-  --text: #eef2f7;
-  --muted: #8899aa;
-  --faint: rgba(255,255,255,0.04);
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: 'DM Sans', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  overflow-x: hidden;
-  line-height: 1.6;
-}
-
-/* ── CANVAS ── */
-canvas {
-  position: fixed; top: 0; left: 0;
-  width: 100%; height: 100%;
-  z-index: -2; pointer-events: none;
-}
-
-.ambient {
-  position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  background:
-    radial-gradient(ellipse 60% 50% at 15% 20%, rgba(109,229,255,.09), transparent),
-    radial-gradient(ellipse 50% 60% at 85% 75%, rgba(167,139,250,.09), transparent),
-    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(244,114,182,.04), transparent);
-}
-
-/* ── NAV ── */
-nav {
-  position: fixed; width: 100%; top: 0; z-index: 200;
-  backdrop-filter: blur(24px) saturate(1.5);
-  background: rgba(3,5,15,0.7);
-  border-bottom: 1px solid var(--border);
-}
-
-.nav-inner {
-  max-width: 1280px; margin: auto;
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 18px 48px;
-}
-
-.logo {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.1rem; font-weight: 700;
-  color: var(--primary); letter-spacing: 0.02em;
-}
-
-nav ul { display: flex; gap: 28px; list-style: none; }
-
-nav a {
-  font-size: 0.85rem; font-weight: 500; letter-spacing: 0.04em;
-  text-transform: uppercase; color: var(--muted);
-  text-decoration: none; transition: color .25s;
-}
-
-nav a:hover { color: var(--primary); }
-
-.nav-cv {
-  padding: 8px 18px; border-radius: 6px;
-  border: 1px solid var(--border-bright);
-  color: var(--primary) !important;
-  font-size: 0.8rem !important;
-  transition: background .25s, transform .2s !important;
-}
-
-.nav-cv:hover {
-  background: rgba(109,229,255,0.08);
-  transform: translateY(-1px);
-}
-
-/* ── SECTIONS ── */
-.wrap { max-width: 1280px; margin: auto; padding: 0 48px; }
-
-section { padding: 110px 0; }
-
-/* ── HERO ── */
-.hero {
-  min-height: 100vh;
-  display: flex; align-items: center;
-  padding-top: 80px;
-}
-
-.hero-layout {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 60px; align-items: center;
-}
-
-.eyebrow {
-  font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em;
-  text-transform: uppercase; color: var(--primary);
-  margin-bottom: 18px;
-  display: flex; align-items: center; gap: 10px;
-}
-
-.eyebrow::before {
-  content: ''; display: block;
-  width: 30px; height: 1px; background: var(--primary);
-}
-
-.hero h1 {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(2.8rem, 5vw, 4.8rem);
-  font-weight: 800; line-height: 1.05;
-  letter-spacing: -0.02em;
-  margin-bottom: 24px;
-}
-
-.grad {
-  background: linear-gradient(120deg, var(--primary) 0%, var(--secondary) 60%, var(--accent) 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.hero-sub {
-  color: var(--muted); font-size: 1.05rem; line-height: 1.8;
-  max-width: 620px; margin-bottom: 36px;
-}
-
-.hero-badges {
-  display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 40px;
-}
-
-.badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 6px 14px; border-radius: 100px;
-  font-size: 0.78rem; font-weight: 500;
-  border: 1px solid var(--border);
-  background: var(--surface); color: var(--muted);
-}
-
-.badge.active {
-  border-color: rgba(109,229,255,0.3);
-  background: rgba(109,229,255,0.06);
-  color: var(--primary);
-}
-
-.badge-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--primary);
-  box-shadow: 0 0 6px var(--primary);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
-
-.hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
-
-.btn-primary {
-  padding: 13px 28px; border-radius: 8px;
-  background: linear-gradient(135deg, rgba(109,229,255,.15), rgba(167,139,250,.15));
-  border: 1px solid rgba(109,229,255,0.3);
-  color: var(--primary); text-decoration: none;
-  font-size: 0.9rem; font-weight: 500;
-  transition: all .3s; display: inline-flex; align-items: center; gap: 8px;
-}
-
-.btn-primary:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(109,229,255,0.2);
-  border-color: var(--primary);
-}
-
-.btn-secondary {
-  padding: 13px 28px; border-radius: 8px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text); text-decoration: none;
-  font-size: 0.9rem; font-weight: 500;
-  transition: all .3s; display: inline-flex; align-items: center; gap: 8px;
-}
-
-.btn-secondary:hover {
-  transform: translateY(-3px);
-  border-color: rgba(255,255,255,0.2);
-  background: var(--surface-hover);
-}
-
-/* Hero stats */
-.hero-stats {
-  display: flex; flex-direction: column; gap: 20px;
-  padding: 36px 30px; border-radius: 20px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  backdrop-filter: blur(20px);
-  min-width: 200px;
-}
-
-.stat { text-align: center; }
-
-.stat-num {
-  font-family: 'Syne', sans-serif;
-  font-size: 2.2rem; font-weight: 800;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  background-clip: text;
-  line-height: 1;
-}
-
-.stat-label {
-  font-size: 0.72rem; color: var(--muted);
-  text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px;
-}
-
-.stat-divider {
-  height: 1px; background: var(--border);
-}
-
-/* ── SECTION TITLES ── */
-.section-header { margin-bottom: 60px; }
-
-.section-tag {
-  font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--primary); font-weight: 500;
-  display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
-}
-
-.section-tag::before {
-  content: ''; width: 24px; height: 1px; background: var(--primary);
-}
-
-.section-title {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(2rem, 3.5vw, 3rem);
-  font-weight: 800; letter-spacing: -0.02em;
-}
-
-/* ── CARDS ── */
-.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px; padding: 28px;
-  backdrop-filter: blur(20px);
-  transition: all .35s;
-  position: relative; overflow: hidden;
-}
-
-.card::before {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(109,229,255,.03), transparent);
-  opacity: 0; transition: opacity .35s;
-}
-
-.card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(109,229,255,0.2);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
-}
-
-.card:hover::before { opacity: 1; }
-
-.card-icon {
-  font-size: 1.6rem; margin-bottom: 16px;
-}
-
-.card h3 {
-  font-family: 'Syne', sans-serif;
-  font-size: 1rem; font-weight: 700;
-  color: var(--text); margin-bottom: 10px;
-}
-
-.card p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }
-
-/* ── ABOUT ── */
-.about-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: start;
-}
-
-.about-text p {
-  color: var(--muted); line-height: 1.85; margin-bottom: 20px; font-size: 0.95rem;
-}
-
-.about-text p:last-child { margin-bottom: 0; }
-
-.about-highlights { display: flex; flex-direction: column; gap: 16px; }
-
-.highlight-item {
-  padding: 20px 24px; border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  display: flex; gap: 16px; align-items: flex-start;
-  transition: border-color .3s;
-}
-
-.highlight-item:hover { border-color: rgba(109,229,255,0.2); }
-
-.hi-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }
-
-.hi-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 0.9rem; font-weight: 700; margin-bottom: 4px;
-}
-
-.hi-sub { font-size: 0.82rem; color: var(--muted); }
-
-/* ── TIMELINE ── */
-.timeline { position: relative; padding-left: 32px; }
-
-.timeline::before {
-  content: '';
-  position: absolute; left: 0; top: 8px; bottom: 0;
-  width: 1px;
-  background: linear-gradient(to bottom, var(--primary), rgba(167,139,250,0.3), transparent);
-}
-
-.tl-item {
-  position: relative; margin-bottom: 44px; padding-left: 28px;
-}
-
-.tl-item::before {
-  content: '';
-  position: absolute; left: -38px; top: 6px;
-  width: 14px; height: 14px; border-radius: 50%;
-  background: var(--bg); border: 2px solid var(--primary);
-  box-shadow: 0 0 10px rgba(109,229,255,0.4);
-}
-
-.tl-item.current::before {
-  background: var(--primary);
-  box-shadow: 0 0 16px rgba(109,229,255,0.7);
-}
-
-.tl-date {
-  font-size: 0.75rem; font-weight: 500; letter-spacing: 0.06em;
-  text-transform: uppercase; color: var(--primary); margin-bottom: 6px;
-}
-
-.tl-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.05rem; font-weight: 700; margin-bottom: 4px;
-}
-
-.tl-place {
-  font-size: 0.82rem; color: var(--secondary); margin-bottom: 8px;
-}
-
-.tl-desc { font-size: 0.87rem; color: var(--muted); line-height: 1.7; }
-
-/* ── SKILLS ── */
-.skills-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;
-}
-
-.skill-group {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 16px; padding: 24px;
-}
-
-.skill-group-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--primary); margin-bottom: 16px;
-}
-
-.skill-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-
-.skill-tag {
-  padding: 6px 14px; border-radius: 6px;
-  font-size: 0.8rem; font-weight: 500;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
-  color: var(--muted);
-  transition: all .25s;
-}
-
-.skill-tag:hover {
-  border-color: rgba(109,229,255,0.3);
-  color: var(--primary);
-  background: rgba(109,229,255,0.05);
-}
-
-/* ── TALKS ── */
-.talks-list { display: flex; flex-direction: column; gap: 14px; }
-
-.talk-item {
-  display: grid; grid-template-columns: 90px 1fr;
-  gap: 20px; align-items: start;
-  padding: 20px 24px; border-radius: 12px;
-  border: 1px solid var(--border); background: var(--surface);
-  text-decoration: none; color: inherit;
-  transition: all .3s;
-}
-
-.talk-item:hover {
-  border-color: rgba(109,229,255,0.2);
-  transform: translateX(4px);
-}
-
-.talk-date {
-  font-size: 0.78rem; color: var(--primary);
-  font-weight: 500; padding-top: 2px;
-}
-
-.talk-title {
-  font-size: 0.92rem; font-weight: 500; margin-bottom: 4px;
-}
-
-.talk-venue {
-  font-size: 0.8rem; color: var(--muted);
-}
-
-/* ── AWARDS ── */
-.award-card {
-  padding: 28px; border-radius: 16px;
-  border: 1px solid rgba(167,139,250,0.3);
-  background: rgba(167,139,250,0.05);
-  display: flex; gap: 20px; align-items: flex-start;
-  margin-bottom: 16px;
-}
-
-.award-icon { font-size: 2rem; flex-shrink: 0; }
-
-.award-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.05rem; font-weight: 700; margin-bottom: 6px;
-}
-
-.award-sub { font-size: 0.87rem; color: var(--muted); }
-
-/* ── CONTACT ── */
-.contact-layout {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
-}
-
-.contact-text p {
-  color: var(--muted); font-size: 0.95rem; line-height: 1.8; margin-bottom: 20px;
-}
-
-.contact-links { display: flex; flex-direction: column; gap: 14px; }
-
-.contact-link {
-  display: flex; align-items: center; gap: 14px;
-  padding: 16px 20px; border-radius: 12px;
-  border: 1px solid var(--border); background: var(--surface);
-  text-decoration: none; color: var(--text);
-  transition: all .3s; font-size: 0.9rem;
-}
-
-.contact-link:hover {
-  border-color: rgba(109,229,255,0.3);
-  transform: translateX(4px);
-  color: var(--primary);
-}
-
-.cl-icon { font-size: 1.2rem; flex-shrink: 0; }
-
-/* ── FOOTER ── */
-footer {
-  border-top: 1px solid var(--border);
-  padding: 40px 48px;
-  max-width: 1280px; margin: auto;
-  display: flex; justify-content: space-between; align-items: center;
-  color: var(--muted); font-size: 0.82rem;
-}
-
-/* ── DIVIDER ── */
-.section-divider {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border), transparent);
-  max-width: 1280px; margin: 0 auto;
-}
-
-/* ── RESPONSIVE ── */
-@media (max-width: 1024px) {
-  .grid-3 { grid-template-columns: repeat(2, 1fr); }
-  .hero-layout { grid-template-columns: 1fr; }
-  .hero-stats { flex-direction: row; flex-wrap: wrap; justify-content: center; }
-  .stat { flex: 1; min-width: 120px; }
-  .stat-divider { display: none; }
-}
-
-@media (max-width: 768px) {
-  .wrap { padding: 0 24px; }
-  .nav-inner { padding: 16px 24px; flex-direction: column; gap: 12px; }
-  nav ul { gap: 12px; flex-wrap: wrap; justify-content: center; }
-  section { padding: 80px 0; }
-  .grid-3, .grid-2 { grid-template-columns: 1fr; }
-  .about-grid { grid-template-columns: 1fr; }
-  .contact-layout { grid-template-columns: 1fr; }
-  footer { flex-direction: column; gap: 10px; text-align: center; }
-  .talk-item { grid-template-columns: 1fr; }
-}
-</style>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2685.3">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
 </head>
 <body>
-
-<canvas id="c"></canvas>
-<div class="ambient"></div>
-
-<!-- NAV -->
-<nav>
-  <div class="nav-inner">
-    <div class="logo">Atul A. Prajapati</div>
-    <ul>
-      <li><a href="#about">About</a></li>
-      <li><a href="#research">Research</a></li>
-      <li><a href="#journey">Journey</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#talks">Talks</a></li>
-      <li><a href="#contact">Contact</a></li>
-      <li><a href="CV_Atul.pdf" target="_blank" class="nav-cv">↓ CV</a></li>
-    </ul>
-  </div>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="wrap" style="width:100%">
-    <div class="hero-layout">
-      <div>
-        <div class="eyebrow">Astroparticle Physics Researcher</div>
-        <h1>
-          Probing the<br>
-          <span class="grad">Dark Universe</span><br>
-          with Detectors &amp; ML
-        </h1>
-        <p class="hero-sub">
-          PostDoc at University of L'Aquila, working on the <strong style="color:var(--text)">XENONnT</strong> experiment 
-          and <strong style="color:var(--text)">DareDevil</strong> low-mass dark matter search project at LNGS, Italy.
-          Wenner-Gren Fellow — joining Stockholm University in July 2026.
-        </p>
-        <div class="hero-badges">
-          <span class="badge active"><span class="badge-dot"></span>PostDoc · Univ. of L'Aquila</span>
-          <span class="badge">XENONnT Run Coordinator</span>
-          <span class="badge">Wenner-Gren Fellow 2026</span>
-          <span class="badge">LNGS Underground Lab</span>
-        </div>
-        <div class="hero-ctas">
-          <a href="#research" class="btn-primary">Explore Research →</a>
-          <a href="CV_Atul.pdf" target="_blank" class="btn-secondary">↓ Download CV</a>
-          <a href="https://www.researchgate.net/profile/Atul-Prajapati-2" target="_blank" class="btn-secondary">ResearchGate ↗</a>
-        </div>
-      </div>
-      <div class="hero-stats">
-        <div class="stat">
-          <div class="stat-num">10+</div>
-          <div class="stat-label">Conf. Talks</div>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat">
-          <div class="stat-num">3</div>
-          <div class="stat-label">Experiments</div>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat">
-          <div class="stat-num">6+</div>
-          <div class="stat-label">Years Research</div>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat">
-          <div class="stat-num">1</div>
-          <div class="stat-label">Best Poster Award</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- ABOUT -->
-<section id="about">
-  <div class="wrap">
-    <div class="section-header">
-      <div class="section-tag">Who I Am</div>
-      <h2 class="section-title">About Me</h2>
-    </div>
-    <div class="about-grid">
-      <div class="about-text">
-        <p>
-          I am a PostDoctoral Researcher at the University of L'Aquila, Italy, working on the
-          <strong style="color:var(--text)">XENONnT</strong> noble-liquid dark matter experiment 
-          and the <strong style="color:var(--text)">DareDevil</strong> project — a low-mass dark matter search 
-          using GaAs crystal bolometers at LNGS.
-        </p>
-        <p>
-          I completed my Ph.D. at the <strong style="color:var(--text)">Gran Sasso Science Institute (GSSI)</strong> 
-          in Astroparticle Physics, where my thesis focused on multivariate analysis and machine-learning-based 
-          background rejection for the CYGNO/INITIUM directional dark matter experiment.
-        </p>
-        <p>
-          I am a recipient of the <strong style="color:var(--text)">Wenner-Gren Fellowship</strong>, 
-          and will be joining <strong style="color:var(--text)">Stockholm University</strong> in July 2026 
-          for my next PostDoc position, continuing work within the XENONnT collaboration.
-        </p>
-        <p>
-          Currently serving as <strong style="color:var(--text)">Run Coordinator</strong> for XENONnT 
-          (since August 2025), and supervising a Master's thesis project on signal/background discrimination with ML 
-          in the XENONnT experiment.
-        </p>
-      </div>
-      <div class="about-highlights">
-        <div class="highlight-item">
-          <div class="hi-icon">🔬</div>
-          <div>
-            <div class="hi-title">XENONnT Experiment</div>
-            <div class="hi-sub">Peak bias reconstruction, ¹³⁶Xe 2νββ signal modeling with MC simulations, Run Coordinator since Aug 2025</div>
-          </div>
-        </div>
-        <div class="highlight-item">
-          <div class="hi-icon">🌑</div>
-          <div>
-            <div class="hi-title">DareDevil Project</div>
-            <div class="hi-sub">Low-mass dark matter search with GaAs crystal bolometers; heat & light channel data analysis</div>
-          </div>
-        </div>
-        <div class="highlight-item">
-          <div class="hi-icon">🧠</div>
-          <div>
-            <div class="hi-title">CYGNO / INITIUM</div>
-            <div class="hi-sub">PhD work: directional dark matter, Mask R-CNN track reconstruction, first NID at atmospheric pressure</div>
-          </div>
-        </div>
-        <div class="highlight-item">
-          <div class="hi-icon">🏆</div>
-          <div>
-            <div class="hi-title">Wenner-Gren Fellowship</div>
-            <div class="hi-sub">Awarded for research excellence — joining Stockholm University, July 2026</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- RESEARCH -->
-<section id="research">
-  <div class="wrap">
-    <div class="section-header">
-      <div class="section-tag">What I Work On</div>
-      <h2 class="section-title">Research Areas</h2>
-    </div>
-    <div class="grid-3">
-      <div class="card">
-        <div class="card-icon">⚫</div>
-        <h3>Dark Matter Detection</h3>
-        <p>Rare event searches with noble-liquid (XENONnT) and gaseous TPC (CYGNO/INITIUM) detectors. Directional sensitivity and low-mass dark matter with DareDevil/GaAs bolometers.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🤖</div>
-        <h3>Machine Learning & CV</h3>
-        <p>Mask R-CNN for 3D particle track reconstruction and identification. Deep neural networks, UNets, Res-UNets for signal/background discrimination in rare-event experiments.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🔭</div>
-        <h3>Detector Physics & R&D</h3>
-        <p>GEM amplification structures, negative ion drift at atmospheric pressure (first-ever optical readout), electroluminescence characterization, sCMOS & PMT readout systems.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">⚛️</div>
-        <h3>XENONnT Analysis</h3>
-        <p>Peak bias correction maps using FUSE simulations, ¹³⁶Xe double-beta decay spectral modeling with BSM physics probes, data-taking and calibration operations at LNGS.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🛰️</div>
-        <h3>Space Weather (Early Work)</h3>
-        <p>Developed ANNIM-3D — an artificial neural network-based 3D ionospheric model trained on Ionosonde and GNSS-RO data for electron density and height prediction.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">📊</div>
-        <h3>Scientific Computing</h3>
-        <p>ROOT, Geant4/FUSE simulations, Python ML pipelines, TensorFlow, OpenCV, parallel and GPU programming for high-performance physics data analysis.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- JOURNEY / TIMELINE -->
-<section id="journey">
-  <div class="wrap">
-    <div class="section-header">
-      <div class="section-tag">Career Path</div>
-      <h2 class="section-title">Research Journey</h2>
-    </div>
-    <div class="timeline">
-
-      <div class="tl-item current">
-        <div class="tl-date">Jul 2026 – Future</div>
-        <div class="tl-title">PostDoctoral Researcher — Stockholm University</div>
-        <div class="tl-place">🇸🇪 Stockholm, Sweden · Wenner-Gren Fellow</div>
-        <div class="tl-desc">XENONnT collaboration. Awarded the Wenner-Gren Fellowship for foreign researchers.</div>
-      </div>
-
-      <div class="tl-item current">
-        <div class="tl-date">2024 – Present</div>
-        <div class="tl-title">PostDoctoral Researcher — University of L'Aquila</div>
-        <div class="tl-place">🇮🇹 L'Aquila, Italy · XENONnT &amp; DareDevil</div>
-        <div class="tl-desc">Peak bias reconstruction for XENONnT; ¹³⁶Xe 2νββ signal modeling; GaAs crystal data analysis for DareDevil low-mass dark matter search. Run Coordinator since August 2025. Supervising a Master's thesis on ML-based signal discrimination.</div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-date">2019 – 2024</div>
-        <div class="tl-title">Ph.D. — Gran Sasso Science Institute (GSSI)</div>
-        <div class="tl-place">🇮🇹 L'Aquila, Italy · Astroparticle Physics</div>
-        <div class="tl-desc">Thesis: <em>Multivariate analysis for background rejection in CYGNO/INITIUM experiment.</em> Developed ML algorithms for signal/background discrimination; led Mask R-CNN track reconstruction; contributed to first-ever observation of Negative Ion Drift at atmospheric pressure with optical readout.</div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-date">2018 – 2019</div>
-        <div class="tl-title">Junior Research Fellow — Indian Institute of Geomagnetism</div>
-        <div class="tl-place">🇮🇳 Navi Mumbai, India · Space Weather</div>
-        <div class="tl-desc">Developed ANNIM-3D: a neural-network-based 3D ionospheric model using Ionosonde &amp; GNSS-RO data for electron density prediction.</div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-date">2016 – 2018</div>
-        <div class="tl-title">M.Sc. Nuclear Physics — University of Mumbai</div>
-        <div class="tl-place">🇮🇳 Mumbai, India · UM-DAE-CEBS</div>
-        <div class="tl-desc">Thesis: High Resolution γ-ray Spectroscopy using Digital Data Acquisition System. Measured ⁵⁷Co half-life; characterized HPGe and CdTe detectors.</div>
-      </div>
-
-      <div class="tl-item">
-        <div class="tl-date">2013 – 2016</div>
-        <div class="tl-title">B.Sc. Physics — University of Mumbai</div>
-        <div class="tl-place">🇮🇳 Mumbai, India</div>
-        <div class="tl-desc">Foundation in classical and modern physics; hands-on experience with radiation detectors at CEBS (SARP 2017 program).</div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- SKILLS -->
-<section id="skills">
-  <div class="wrap">
-    <div class="section-header">
-      <div class="section-tag">Toolkit</div>
-      <h2 class="section-title">Technical Skills</h2>
-    </div>
-    <div class="skills-grid">
-      <div class="skill-group">
-        <div class="skill-group-title">Programming</div>
-        <div class="skill-tags">
-          <span class="skill-tag">Python</span>
-          <span class="skill-tag">C++</span>
-          <span class="skill-tag">C</span>
-          <span class="skill-tag">ROOT</span>
-          <span class="skill-tag">MATLAB</span>
-          <span class="skill-tag">LaTeX</span>
-          <span class="skill-tag">Shell Scripting</span>
-        </div>
-      </div>
-      <div class="skill-group">
-        <div class="skill-group-title">Machine Learning</div>
-        <div class="skill-tags">
-          <span class="skill-tag">TensorFlow</span>
-          <span class="skill-tag">Scikit-learn</span>
-          <span class="skill-tag">UNet / Res-UNet</span>
-          <span class="skill-tag">Mask R-CNN</span>
-          <span class="skill-tag">Tree-based NNs</span>
-          <span class="skill-tag">GPU Programming</span>
-          <span class="skill-tag">Parallel Computing</span>
-        </div>
-      </div>
-      <div class="skill-group">
-        <div class="skill-group-title">Image Processing</div>
-        <div class="skill-tags">
-          <span class="skill-tag">OpenCV</span>
-          <span class="skill-tag">Scikit-image</span>
-          <span class="skill-tag">PIL</span>
-          <span class="skill-tag">sCMOS Analysis</span>
-          <span class="skill-tag">Track Reconstruction</span>
-        </div>
-      </div>
-      <div class="skill-group">
-        <div class="skill-group-title">Detector & Physics</div>
-        <div class="skill-tags">
-          <span class="skill-tag">GEM Detectors</span>
-          <span class="skill-tag">TPC</span>
-          <span class="skill-tag">Geant4 / FUSE</span>
-          <span class="skill-tag">PMT Waveforms</span>
-          <span class="skill-tag">Negative Ion Drift</span>
-          <span class="skill-tag">γ-ray Spectroscopy</span>
-          <span class="skill-tag">Noble Liquids</span>
-        </div>
-      </div>
-      <div class="skill-group">
-        <div class="skill-group-title">Operating Systems</div>
-        <div class="skill-tags">
-          <span class="skill-tag">Linux</span>
-          <span class="skill-tag">macOS</span>
-          <span class="skill-tag">Windows</span>
-        </div>
-      </div>
-      <div class="skill-group">
-        <div class="skill-group-title">Experiments</div>
-        <div class="skill-tags">
-          <span class="skill-tag">XENONnT</span>
-          <span class="skill-tag">CYGNO / INITIUM</span>
-          <span class="skill-tag">DareDevil</span>
-          <span class="skill-tag">LIME Detector</span>
-          <span class="skill-tag">MANGO Detector</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- AWARDS -->
-<section id="awards">
-  <div class="wrap">
-    <div class="section-header">
-      <div class="section-tag">Recognition</div>
-      <h2 class="section-title">Awards &amp; Fellowships</h2>
-    </div>
-    <div class="award-card">
-      <div class="award-icon">🏆</div>
-      <div>
-        <div class="award-title">Wenner-Gren Fellowship for Foreign Researchers</div>
-        <div class="award-sub">Awarded to join Stockholm University (July 2026) within the XENONnT collaboration. Prestigious Swedish foundation fellowship supporting international scientific exchange.</div>
-      </div>
-    </div>
-    <div class="award-card">
-      <div class="award-icon">🥇</div>
-      <div>
-        <div class="award-title">Best Poster Award — ACAT-2021</div>
-        <div class="award-sub">20th International Workshop on Advanced Computing and Analysis Techniques in Physics Research, Daejeon, South Korea (December 2021). Poster: <em>Reconstruction and Particle Identification with CYGNO experiment.</em></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- TALKS -->
-<section id="talks">
-  <div class="wrap">
-    <div class="section-header">
-      <div class="section-tag">Presentations</div>
-      <h2 class="section-title">Selected Talks &amp; Posters</h2>
-    </div>
-    <div class="talks-list">
-      <a href="https://indico.in2p3.fr/event/35255/contributions/161615/" target="_blank" class="talk-item">
-        <div class="talk-date">Nov 2025</div>
-        <div>
-          <div class="talk-title">XENONnT latest results and updates</div>
-          <div class="talk-venue">2nd International Conference on the Physics of the Two Infinities — Tokyo, Japan</div>
-        </div>
-      </a>
-      <a href="https://agenda.infn.it/event/33457/contributions/207010/" target="_blank" class="talk-item">
-        <div class="talk-date">Sep 2023</div>
-        <div>
-          <div class="talk-title">The CYGNO project for directional Dark Matter searches</div>
-          <div class="talk-venue">TeV Particle Astrophysics (TeVPA) — Napoli, Italy</div>
-        </div>
-      </a>
-      <a href="https://agenda.infn.it/event/34526/contributions/192115/" target="_blank" class="talk-item">
-        <div class="talk-date">Mar 2023</div>
-        <div>
-          <div class="talk-title">Reconstruction and Particle Identification with CYGNO Using Machine Learning</div>
-          <div class="talk-venue">ML@INFN: Machine Learning activities at INFN Roma — Rome, Italy</div>
-        </div>
-      </a>
-      <a href="https://agenda.infn.it/event/33483/contributions/187351/" target="_blank" class="talk-item">
-        <div class="talk-date">Dec 2022</div>
-        <div>
-          <div class="talk-title">Rejecting Electron Background using Machine Learning algorithms</div>
-          <div class="talk-venue">CYGNO Collaboration Meeting — Rome, Italy</div>
-        </div>
-      </a>
-      <a href="http://vietnam.in2p3.fr/2023/tmex/transparencies/ParallelS1/" target="_blank" class="talk-item">
-        <div class="talk-date">Jan 2023</div>
-        <div>
-          <div class="talk-title">The CYGNO experiment: A directional Dark Matter detector with optical readout</div>
-          <div class="talk-venue">19th Rencontres du Vietnam (TMEX) — Quy Nhon, Vietnam</div>
-        </div>
-      </a>
-      <a href="https://indico.cern.ch/event/855454/contributions/4596531/" target="_blank" class="talk-item">
-        <div class="talk-date">Dec 2021</div>
-        <div>
-          <div class="talk-title">Reconstruction and Particle Identification with CYGNO experiment <span style="color:var(--secondary);font-size:0.78rem;margin-left:6px">🏆 Best Poster</span></div>
-          <div class="talk-venue">ACAT-2021 — Daejeon, South Korea</div>
-        </div>
-      </a>
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<!-- CONTACT -->
-<section id="contact">
-  <div class="wrap">
-    <div class="section-header">
-      <div class="section-tag">Get In Touch</div>
-      <h2 class="section-title">Let's Connect</h2>
-    </div>
-    <div class="contact-layout">
-      <div class="contact-text">
-        <p>
-          I'm always open to discussions on dark matter detection, gaseous and noble-liquid detectors,
-          machine learning for particle physics, or potential collaborations.
-        </p>
-        <p>
-          Whether you're from academia, a fellow physicist, or just curious about the dark universe —
-          feel free to reach out.
-        </p>
-        <a href="CV_Atul.pdf" target="_blank" class="btn-primary" style="display:inline-flex;margin-top:8px">
-          ↓ Download Full CV
-        </a>
-      </div>
-      <div class="contact-links">
-        <a href="mailto:atulashok.prajapati@univaq.it" class="contact-link">
-          <span class="cl-icon">✉️</span>
-          <div>
-            <div style="font-weight:500">Email</div>
-            <div style="font-size:0.82rem;color:var(--muted)">atulashok.prajapati@univaq.it</div>
-          </div>
-        </a>
-        <a href="https://www.researchgate.net/profile/Atul-Prajapati-2" target="_blank" class="contact-link">
-          <span class="cl-icon">🔬</span>
-          <div>
-            <div style="font-weight:500">ResearchGate</div>
-            <div style="font-size:0.82rem;color:var(--muted)">Atul-Prajapati-2</div>
-          </div>
-        </a>
-        <a href="CV_Atul.pdf" target="_blank" class="contact-link">
-          <span class="cl-icon">📄</span>
-          <div>
-            <div style="font-weight:500">Curriculum Vitae</div>
-            <div style="font-size:0.82rem;color:var(--muted)">Full CV — PDF</div>
-          </div>
-        </a>
-        <div class="contact-link" style="cursor:default">
-          <span class="cl-icon">📍</span>
-          <div>
-            <div style="font-weight:500">Location</div>
-            <div style="font-size:0.82rem;color:var(--muted)">L'Aquila, Italy · → Stockholm, Jul 2026</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
-
-<footer>
-  <span>© 2025 Atul Ashok Prajapati · Astroparticle Physics</span>
-  <span>XENONnT · DareDevil · CYGNO/INITIUM</span>
-</footer>
-
-<!-- PARTICLE CANVAS -->
-<script>
-const canvas = document.getElementById('c');
-const ctx = canvas.getContext('2d');
-
-function resize() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener('resize', resize);
-
-const N = 140;
-const particles = Array.from({length: N}, () => ({
-  x: Math.random() * window.innerWidth,
-  y: Math.random() * window.innerHeight,
-  vx: (Math.random() - .5) * .35,
-  vy: (Math.random() - .5) * .35,
-  r: Math.random() * 1.5 + .5,
-  hue: Math.random() > .6 ? 190 : 260
-}));
-
-function draw() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  particles.forEach(p => {
-    p.x += p.vx;
-    p.y += p.vy;
-    if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-    if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = p.hue === 190 ? 'rgba(109,229,255,0.7)' : 'rgba(167,139,250,0.6)';
-    ctx.fill();
-  });
-
-  for (let i = 0; i < N; i++) {
-    for (let j = i + 1; j < N; j++) {
-      const dx = particles[i].x - particles[j].x;
-      const dy = particles[i].y - particles[j].y;
-      const d = Math.sqrt(dx * dx + dy * dy);
-      if (d < 110) {
-        const a = (1 - d / 110) * 0.3;
-        ctx.beginPath();
-        ctx.moveTo(particles[i].x, particles[i].y);
-        ctx.lineTo(particles[j].x, particles[j].y);
-        ctx.strokeStyle = `rgba(143,124,255,${a})`;
-        ctx.lineWidth = 0.4;
-        ctx.stroke();
-      }
-    }
-  }
-
-  requestAnimationFrame(draw);
-}
-draw();
-</script>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1">&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1">&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1">&lt;title&gt;Atul Prajapati | Astroparticle Physics&lt;/title&gt;</p>
+<p class="p1">&lt;link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;0,800;1,300&amp;display=swap" rel="stylesheet"&gt;</p>
+<p class="p1">&lt;style&gt;</p>
+<p class="p1">:root {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--bg: #03050f;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--surface: rgba(255,255,255,0.04);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--surface-hover: rgba(255,255,255,0.07);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--border: rgba(255,255,255,0.08);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--border-bright: rgba(109,229,255,0.4);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--primary: #6de5ff;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--secondary: #a78bfa;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--accent: #f472b6;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--text: #eef2f7;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--muted: #8899aa;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--faint: rgba(255,255,255,0.04);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">* { margin: 0; padding: 0; box-sizing: border-box; }</p>
+<p class="p2"><br></p>
+<p class="p1">html { scroll-behavior: smooth; }</p>
+<p class="p2"><br></p>
+<p class="p1">body {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-family: 'DM Sans', sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: var(--bg);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>color: var(--text);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>overflow-x: hidden;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>line-height: 1.6;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── CANVAS ── */</p>
+<p class="p1">canvas {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>position: fixed; top: 0; left: 0;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>width: 100%; height: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>z-index: -2; pointer-events: none;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.ambient {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>position: fixed; inset: 0; z-index: -1; pointer-events: none;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background:</p>
+<p class="p1"><span class="Apple-converted-space">    </span>radial-gradient(ellipse 60% 50% at 15% 20%, rgba(109,229,255,.09), transparent),</p>
+<p class="p1"><span class="Apple-converted-space">    </span>radial-gradient(ellipse 50% 60% at 85% 75%, rgba(167,139,250,.09), transparent),</p>
+<p class="p1"><span class="Apple-converted-space">    </span>radial-gradient(ellipse 40% 40% at 50% 50%, rgba(244,114,182,.04), transparent);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── NAV ── */</p>
+<p class="p1">nav {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>position: fixed; width: 100%; top: 0; z-index: 200;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>backdrop-filter: blur(24px) saturate(1.5);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: rgba(3,5,15,0.7);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border-bottom: 1px solid var(--border);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.nav-inner {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>max-width: 1280px; margin: auto;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display: flex; justify-content: space-between; align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>padding: 18px 48px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.logo {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 1.1rem; font-weight: 700;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>color: var(--primary); letter-spacing: 0.02em;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">nav ul { display: flex; gap: 28px; list-style: none; }</p>
+<p class="p2"><br></p>
+<p class="p1">nav a {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 0.85rem; font-weight: 500; letter-spacing: 0.04em;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>text-transform: uppercase; color: var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>text-decoration: none; transition: color .25s;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">nav a:hover { color: var(--primary); }</p>
+<p class="p2"><br></p>
+<p class="p1">.nav-cv {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>padding: 8px 18px; border-radius: 6px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border: 1px solid var(--border-bright);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>color: var(--primary) !important;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 0.8rem !important;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>transition: background .25s, transform .2s !important;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.nav-cv:hover {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: rgba(109,229,255,0.08);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>transform: translateY(-1px);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── SECTIONS ── */</p>
+<p class="p1">.wrap { max-width: 1280px; margin: auto; padding: 0 48px; }</p>
+<p class="p2"><br></p>
+<p class="p1">section { padding: 110px 0; }</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── HERO ── */</p>
+<p class="p1">.hero {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>min-height: 100vh;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display: flex; align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>padding-top: 100px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.hero-layout {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display: grid;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>grid-template-columns: 1fr 320px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>gap: 60px; align-items: center;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.eyebrow {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>text-transform: uppercase; color: var(--primary);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>margin-bottom: 18px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display: flex; align-items: center; gap: 10px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.eyebrow::before {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>content: ''; display: block;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>width: 30px; height: 1px; background: var(--primary);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.hero h1 {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: clamp(2.5rem, 4.5vw, 4rem);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-weight: 800; line-height: 1.1;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>letter-spacing: -0.01em;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>margin-bottom: 24px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.grad {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: linear-gradient(120deg, var(--primary) 0%, var(--secondary) 60%, var(--accent) 100%);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>-webkit-background-clip: text; -webkit-text-fill-color: transparent;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background-clip: text;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.hero-sub {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>color: var(--muted); font-size: 1.05rem; line-height: 1.8;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>max-width: 680px; margin-bottom: 36px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.hero-badges {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 40px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.badge {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display: inline-flex; align-items: center; gap: 6px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>padding: 6px 14px; border-radius: 100px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 0.78rem; font-weight: 500;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: var(--surface); color: var(--muted);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.badge.active {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border-color: rgba(109,229,255,0.3);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: rgba(109,229,255,0.06);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>color: var(--primary);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.badge-dot {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>width: 6px; height: 6px; border-radius: 50%;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: var(--primary);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>box-shadow: 0 0 6px var(--primary);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>animation: pulse 2s infinite;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">@keyframes pulse {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>0%, 100% { opacity: 1; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>50% { opacity: 0.4; }</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 50px; }</p>
+<p class="p2"><br></p>
+<p class="p1">.btn-primary {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>padding: 13px 28px; border-radius: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: linear-gradient(135deg, rgba(109,229,255,.15), rgba(167,139,250,.15));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border: 1px solid rgba(109,229,255,0.3);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>color: var(--primary); text-decoration: none;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 0.9rem; font-weight: 500;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>transition: all .3s; display: inline-flex; align-items: center; gap: 8px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.btn-primary:hover {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>transform: translateY(-3px);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>box-shadow: 0 8px 30px rgba(109,229,255,0.2);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border-color: var(--primary);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.btn-secondary {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>padding: 13px 28px; border-radius: 8px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: var(--surface);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>color: var(--text); text-decoration: none;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 0.9rem; font-weight: 500;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>transition: all .3s; display: inline-flex; align-items: center; gap: 8px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.btn-secondary:hover {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>transform: translateY(-3px);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border-color: rgba(255,255,255,0.2);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: var(--surface-hover);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* Profile Picture Frame */</p>
+<p class="p1">.hero-profile {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>position: relative;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>width: 300px; height: 300px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border-radius: 50%;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>padding: 5px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: linear-gradient(135deg, var(--primary), var(--secondary));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>box-shadow: 0 0 40px rgba(109,229,255,0.15);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>justify-self: center;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.profile-img-container {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>width: 100%; height: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border-radius: 50%;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: var(--bg);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>overflow: hidden;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display: flex; align-items: center; justify-content: center;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.profile-img-container img {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>width: 100%; height: 100%;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>object-fit: cover;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* Horizontal Stats Dashboard */</p>
+<p class="p1">.hero-stats {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display: flex; flex-direction: row; justify-content: space-between;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>align-items: center; gap: 20px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>padding: 24px 40px; border-radius: 20px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: var(--surface);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>backdrop-filter: blur(20px);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>width: 100%;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.stat { text-align: center; flex: 1; }</p>
+<p class="p2"><br></p>
+<p class="p1">.stat-num {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 2.2rem; font-weight: 800;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: linear-gradient(135deg, var(--primary), var(--secondary));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>-webkit-background-clip: text; -webkit-text-fill-color: transparent;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background-clip: text;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>line-height: 1;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.stat-label {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 0.72rem; color: var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.stat-divider {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>width: 1px; height: 40px; background: var(--border);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── SECTION TITLES ── */</p>
+<p class="p1">.section-header { margin-bottom: 60px; }</p>
+<p class="p2"><br></p>
+<p class="p1">.section-tag {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>color: var(--primary); font-weight: 500;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display: flex; align-items: center; gap: 10px; margin-bottom: 12px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.section-tag::before {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>content: ''; width: 24px; height: 1px; background: var(--primary);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.section-title {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: clamp(2rem, 3.5vw, 2.6rem);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-weight: 800; letter-spacing: -0.01em;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── CARDS ── */</p>
+<p class="p1">.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }</p>
+<p class="p1">.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }</p>
+<p class="p2"><br></p>
+<p class="p1">.card {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: var(--surface);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border-radius: 16px; padding: 28px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>backdrop-filter: blur(20px);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>transition: all .35s;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>position: relative; overflow: hidden;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.card::before {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>content: ''; position: absolute; inset: 0;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: linear-gradient(135deg, rgba(109,229,255,.03), transparent);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>opacity: 0; transition: opacity .35s;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.card:hover {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>transform: translateY(-6px);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border-color: rgba(109,229,255,0.2);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>box-shadow: 0 12px 40px rgba(0,0,0,0.4);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.card:hover::before { opacity: 1; }</p>
+<p class="p2"><br></p>
+<p class="p1">.card-icon {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 1.6rem; margin-bottom: 16px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.card h3 {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 1.05rem; font-weight: 700;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>color: var(--text); margin-bottom: 10px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.card p { font-size: 0.88rem; color: var(--muted); line-height: 1.7; }</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── ABOUT ── */</p>
+<p class="p1">.about-grid {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: start;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.about-text p {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>color: var(--muted); line-height: 1.85; margin-bottom: 20px; font-size: 0.95rem;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.about-text p:last-child { margin-bottom: 0; }</p>
+<p class="p2"><br></p>
+<p class="p1">.about-highlights { display: flex; flex-direction: column; gap: 16px; }</p>
+<p class="p2"><br></p>
+<p class="p1">.highlight-item {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>padding: 20px 24px; border-radius: 12px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: var(--surface);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display: flex; gap: 16px; align-items: flex-start;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>transition: border-color .3s;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.highlight-item:hover { border-color: rgba(109,229,255,0.2); }</p>
+<p class="p2"><br></p>
+<p class="p1">.hi-icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 2px; }</p>
+<p class="p2"><br></p>
+<p class="p1">.hi-title {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 0.95rem; font-weight: 700; margin-bottom: 4px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.hi-sub { font-size: 0.82rem; color: var(--muted); }</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── TIMELINE ── */</p>
+<p class="p1">.timeline { position: relative; padding-left: 32px; }</p>
+<p class="p2"><br></p>
+<p class="p1">.timeline::before {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>content: '';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>position: absolute; left: 0; top: 8px; bottom: 0;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>width: 1px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: linear-gradient(to bottom, var(--primary), rgba(167,139,250,0.3), transparent);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.tl-item {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>position: relative; margin-bottom: 44px; padding-left: 28px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.tl-item::before {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>content: '';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>position: absolute; left: -38px; top: 6px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>width: 14px; height: 14px; border-radius: 50%;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: var(--bg); border: 2px solid var(--primary);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>box-shadow: 0 0 10px rgba(109,229,255,0.4);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.tl-item.current::before {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: var(--primary);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>box-shadow: 0 0 16px rgba(109,229,255,0.7);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.tl-date {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 0.75rem; font-weight: 500; letter-spacing: 0.06em;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>text-transform: uppercase; color: var(--primary); margin-bottom: 6px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.tl-title {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 1.1rem; font-weight: 700; margin-bottom: 4px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.tl-place {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 0.82rem; color: var(--secondary); margin-bottom: 8px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.tl-desc { font-size: 0.87rem; color: var(--muted); line-height: 1.7; }</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── SKILLS ── */</p>
+<p class="p1">.skills-grid {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.skill-group {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: var(--surface); border: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border-radius: 16px; padding: 24px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.skill-group-title {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>text-transform: uppercase; color: var(--primary); margin-bottom: 16px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.skill-tags { display: flex; flex-wrap: wrap; gap: 8px; }</p>
+<p class="p2"><br></p>
+<p class="p1">.skill-tag {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>padding: 6px 14px; border-radius: 6px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 0.8rem; font-weight: 500;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: rgba(255,255,255,0.05);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border: 1px solid rgba(255,255,255,0.08);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>color: var(--muted);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>transition: all .25s;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.skill-tag:hover {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border-color: rgba(109,229,255,0.3);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>color: var(--primary);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: rgba(109,229,255,0.05);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── TALKS ── */</p>
+<p class="p1">.talks-list { display: flex; flex-direction: column; gap: 14px; }</p>
+<p class="p2"><br></p>
+<p class="p1">.talk-item {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display: grid; grid-template-columns: 90px 1fr;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>gap: 20px; align-items: start;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>padding: 20px 24px; border-radius: 12px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border: 1px solid var(--border); background: var(--surface);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>text-decoration: none; color: inherit;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>transition: all .3s;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.talk-item:hover {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border-color: rgba(109,229,255,0.2);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>transform: translateX(4px);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.talk-date {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 0.78rem; color: var(--primary);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-weight: 500; padding-top: 2px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.talk-title {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 0.92rem; font-weight: 500; margin-bottom: 4px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.talk-venue {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 0.8rem; color: var(--muted);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── AWARDS ── */</p>
+<p class="p1">.award-card {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>padding: 28px; border-radius: 16px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border: 1px solid rgba(167,139,250,0.3);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: rgba(167,139,250,0.05);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display: flex; gap: 20px; align-items: flex-start;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>margin-bottom: 16px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.award-icon { font-size: 2rem; flex-shrink: 0; }</p>
+<p class="p2"><br></p>
+<p class="p1">.award-title {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size: 1.1rem; font-weight: 700; margin-bottom: 6px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.award-sub { font-size: 0.87rem; color: var(--muted); }</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── CONTACT ── */</p>
+<p class="p1">.contact-layout {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.contact-text p {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>color: var(--muted); font-size: 0.95rem; line-height: 1.8; margin-bottom: 20px;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.contact-links { display: flex; flex-direction: column; gap: 14px; }</p>
+<p class="p2"><br></p>
+<p class="p1">.contact-link {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display: flex; align-items: center; gap: 14px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>padding: 16px 20px; border-radius: 12px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border: 1px solid var(--border); background: var(--surface);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>text-decoration: none; color: var(--text);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>transition: all .3s; font-size: 0.9rem;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.contact-link:hover {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border-color: rgba(109,229,255,0.3);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>transform: translateX(4px);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>color: var(--primary);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">.cl-icon { font-size: 1.2rem; flex-shrink: 0; }</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── FOOTER ── */</p>
+<p class="p1">footer {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border-top: 1px solid var(--border);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>padding: 40px 48px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>max-width: 1280px; margin: auto;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display: flex; justify-content: space-between; align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>color: var(--muted); font-size: 0.82rem;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── DIVIDER ── */</p>
+<p class="p1">.section-divider {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>height: 1px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background: linear-gradient(90deg, transparent, var(--border), transparent);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>max-width: 1280px; margin: 0 auto;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">/* ── RESPONSIVE ── */</p>
+<p class="p1">@media (max-width: 1024px) {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.grid-3 { grid-template-columns: repeat(2, 1fr); }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.hero-layout { grid-template-columns: 1fr; justify-content: center; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.hero-stats { flex-wrap: wrap; justify-content: center; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.stat { min-width: 120px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.stat-divider { display: none; }</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">@media (max-width: 768px) {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.wrap { padding: 0 24px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.nav-inner { padding: 16px 24px; flex-direction: column; gap: 12px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>nav ul { gap: 12px; flex-wrap: wrap; justify-content: center; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>section { padding: 80px 0; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.grid-3, .grid-2 { grid-template-columns: 1fr; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.about-grid { grid-template-columns: 1fr; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.contact-layout { grid-template-columns: 1fr; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>footer { flex-direction: column; gap: 10px; text-align: center; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.talk-item { grid-template-columns: 1fr; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.hero-layout { text-align: center; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.eyebrow { justify-content: center; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.eyebrow::before { display: none; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.hero-badges { justify-content: center; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.hero-ctas { justify-content: center; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.hero-stats { flex-direction: column; gap: 20px; padding: 24px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.stat-divider { display: none; }</p>
+<p class="p1">}</p>
+<p class="p1">&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;canvas id="c"&gt;&lt;/canvas&gt;</p>
+<p class="p1">&lt;div class="ambient"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- NAV --&gt;</p>
+<p class="p1">&lt;nav&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="nav-inner"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="logo"&gt;Atul A. Prajapati&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;ul&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;li&gt;&lt;a href="#about"&gt;About&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;li&gt;&lt;a href="#research"&gt;Research&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;li&gt;&lt;a href="#journey"&gt;Journey&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;li&gt;&lt;a href="#skills"&gt;Skills&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;li&gt;&lt;a href="#awards"&gt;Awards&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;li&gt;&lt;a href="#talks"&gt;Talks&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;li&gt;&lt;a href="#contact"&gt;Contact&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;li&gt;&lt;a href="CV_Atul.pdf" target="_blank" class="nav-cv"&gt;↓ CV&lt;/a&gt;&lt;/li&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/ul&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/nav&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- HERO --&gt;</p>
+<p class="p1">&lt;section class="hero"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="wrap" style="width:100%"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="hero-layout"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="eyebrow"&gt;Astroparticle Physics Researcher&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>Probing the&lt;br&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="grad"&gt;Dark Universe&lt;/span&gt;&lt;br&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>with Detectors &amp;amp; ML</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p class="hero-sub"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>PostDoc at University of L'Aquila, working on the &lt;strong style="color:var(--text)"&gt;XENONnT&lt;/strong&gt; experiment<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">          </span>and &lt;strong style="color:var(--text)"&gt;DareDevil&lt;/strong&gt; low-mass dark matter search project at LNGS, Italy.</p>
+<p class="p1"><span class="Apple-converted-space">          </span>Wenner-Gren Fellow — joining Stockholm University in July 2026.</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="hero-badges"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="badge active"&gt;&lt;span class="badge-dot"&gt;&lt;/span&gt;PostDoc · Univ. of L'Aquila&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="badge"&gt;XENONnT Run Coordinator&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="badge"&gt;Wenner-Gren Fellow 2026&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="badge"&gt;LNGS Underground Lab&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="hero-ctas"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;a href="#research" class="btn-primary"&gt;Explore Research →&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;a href="CV_Atul.pdf" target="_blank" class="btn-secondary"&gt;↓ Download CV&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;a href="https://www.researchgate.net/profile/Atul-Prajapati-2" target="_blank" class="btn-secondary"&gt;ResearchGate ↗&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">      </span></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- Profile Picture Frame Box --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="hero-profile"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="profile-img-container"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;!-- Drop your image named 'profile.jpg' into your repository root folder --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;img src="profile.jpg" alt="Dr. Atul Prajapati"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Reallocated Metrics Dashboard (Horizontal Box) --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="hero-stats"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="stat"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="stat-num"&gt;10+&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="stat-label"&gt;Conf. Talks&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="stat-divider"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="stat"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="stat-num"&gt;3&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="stat-label"&gt;Experiments&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="stat-divider"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="stat"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="stat-num"&gt;6+&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="stat-label"&gt;Years Research&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="stat-divider"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="stat"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="stat-num"&gt;1&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="stat-label"&gt;Best Poster Award&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="section-divider"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- ABOUT --&gt;</p>
+<p class="p1">&lt;section id="about"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="wrap"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="section-header"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="section-tag"&gt;Who I Am&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2 class="section-title"&gt;About Me&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="about-grid"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="about-text"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>I am a PostDoctoral Researcher at the University of L'Aquila, Italy, working on the</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;strong style="color:var(--text)"&gt;XENONnT&lt;/strong&gt; noble-liquid dark matter experiment<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">          </span>and the &lt;strong style="color:var(--text)"&gt;DareDevil&lt;/strong&gt; project — a low-mass dark matter search<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">          </span>using GaAs crystal bolometers at LNGS.</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>I completed my Ph.D. at the &lt;strong style="color:var(--text)"&gt;Gran Sasso Science Institute (GSSI)&lt;/strong&gt;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">          </span>in Astroparticle Physics, where my thesis focused on multivariate analysis and machine-learning-based<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">          </span>background rejection for the CYGNO/INITIUM directional dark matter experiment.</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>I am a recipient of the &lt;strong style="color:var(--text)"&gt;Wenner-Gren Fellowship&lt;/strong&gt;,<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">          </span>and will be joining &lt;strong style="color:var(--text)"&gt;Stockholm University&lt;/strong&gt; in July 2026<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">          </span>for my next PostDoc position, continuing work within the XENONnT collaboration.</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>Currently serving as &lt;strong style="color:var(--text)"&gt;Run Coordinator&lt;/strong&gt; for XENONnT<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">          </span>(since August 2025), and supervising a Master's thesis project on signal/background discrimination with ML<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">          </span>in the XENONnT experiment.</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="about-highlights"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="highlight-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="hi-icon"&gt;🔬&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="hi-title"&gt;XENONnT Experiment&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="hi-sub"&gt;Peak bias reconstruction, ¹³⁶Xe 2νββ signal modeling with MC simulations, Run Coordinator since Aug 2025&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="highlight-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="hi-icon"&gt;🌑&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="hi-title"&gt;DareDevil Project&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="hi-sub"&gt;Low-mass dark matter search with GaAs crystal bolometers; heat &amp; light channel data analysis&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="highlight-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="hi-icon"&gt;🧠&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="hi-title"&gt;CYGNO / INITIUM&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="hi-sub"&gt;PhD work: directional dark matter, Mask R-CNN track reconstruction, first NID at atmospheric pressure&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="highlight-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="hi-icon"&gt;🏆&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="hi-title"&gt;Wenner-Gren Fellowship&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="hi-sub"&gt;Awarded for research excellence — joining Stockholm University, July 2026&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="section-divider"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- RESEARCH --&gt;</p>
+<p class="p1">&lt;section id="research"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="wrap"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="section-header"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="section-tag"&gt;What I Work On&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2 class="section-title"&gt;Research Areas&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="grid-3"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="card-icon"&gt;⚫&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;Dark Matter Detection&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Rare event searches with noble-liquid (XENONnT) and gaseous TPC (CYGNO/INITIUM) detectors. Directional sensitivity and low-mass dark matter with DareDevil/GaAs bolometers.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="card-icon"&gt;🤖&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;Machine Learning &amp; CV&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Mask R-CNN for 3D particle track reconstruction and identification. Deep neural networks, UNets, Res-UNets for signal/background discrimination in rare-event experiments.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="card-icon"&gt;🔭&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;Detector Physics &amp; R&amp;D&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;GEM amplification structures, negative ion drift at atmospheric pressure (first-ever optical readout), electroluminescence characterization, sCMOS &amp; PMT readout systems.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="card-icon"&gt;⚛️&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;XENONnT Analysis&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Peak bias correction maps using FUSE simulations, ¹³⁶Xe double-beta decay spectral modeling with BSM physics probes, data-taking and calibration operations at LNGS.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="card-icon"&gt;🛰️&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;Space Weather (Early Work)&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Developed ANNIM-3D — an artificial neural network-based 3D ionospheric model trained on Ionosonde and GNSS-RO data for electron density and height prediction.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="card-icon"&gt;📊&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;h3&gt;Scientific Computing&lt;/h3&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;ROOT, Geant4/FUSE simulations, Python ML pipelines, TensorFlow, OpenCV, parallel and GPU programming for high-performance physics data analysis.&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="section-divider"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- JOURNEY / TIMELINE --&gt;</p>
+<p class="p1">&lt;section id="journey"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="wrap"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="section-header"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="section-tag"&gt;Career Path&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2 class="section-title"&gt;Research Journey&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="timeline"&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="tl-item current"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-date"&gt;Jul 2026 – Future&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-title"&gt;PostDoctoral Researcher — Stockholm University&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-place"&gt;🇸🇪 Stockholm, Sweden · Wenner-Gren Fellow&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-desc"&gt;XENONnT collaboration. Awarded the Wenner-Gren Fellowship for foreign researchers.&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="tl-item current"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-date"&gt;2024 – Present&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-title"&gt;PostDoctoral Researcher — University of L'Aquila&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-place"&gt;🇮🇹 L'Aquila, Italy · XENONnT &amp;amp; DareDevil&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-desc"&gt;Peak bias reconstruction for XENONnT; ¹³⁶Xe 2νββ signal modeling; GaAs crystal data analysis for DareDevil low-mass dark matter search. Run Coordinator since August 2025. Supervising a Master's thesis on ML-based signal discrimination.&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="tl-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-date"&gt;2019 – 2024&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-title"&gt;Ph.D. — Gran Sasso Science Institute (GSSI)&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-place"&gt;🇮🇹 L'Aquila, Italy · Astroparticle Physics&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-desc"&gt;Thesis: &lt;em&gt;Multivariate analysis for background rejection in CYGNO/INITIUM experiment.&lt;/em&gt; Developed ML algorithms for signal/background discrimination; led Mask R-CNN track reconstruction; contributed to first-ever observation of Negative Ion Drift at atmospheric pressure with optical readout.&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="tl-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-date"&gt;2018 – 2019&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-title"&gt;Junior Research Fellow — Indian Institute of Geomagnetism&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-place"&gt;🇮🇳 Navi Mumbai, India · Space Weather&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-desc"&gt;Developed ANNIM-3D: a neural-network-based 3D ionospheric model using Ionosonde &amp;amp; GNSS-RO data for electron density prediction.&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="tl-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-date"&gt;2016 – 2018&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-title"&gt;M.Sc. Nuclear Physics — University of Mumbai&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-place"&gt;🇮🇳 Mumbai, India · UM-DAE-CEBS&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-desc"&gt;Thesis: High Resolution γ-ray Spectroscopy using Digital Data Acquisition System. Measured ⁵⁷Co half-life; characterized HPGe and CdTe detectors.&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="tl-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-date"&gt;2013 – 2016&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-title"&gt;B.Sc. Physics — University of Mumbai&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-place"&gt;🇮🇳 Mumbai, India&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tl-desc"&gt;Foundation in classical and modern physics; hands-on experience with radiation detectors at CEBS (SARP 2017 program).&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="section-divider"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- SKILLS --&gt;</p>
+<p class="p1">&lt;section id="skills"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="wrap"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="section-header"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="section-tag"&gt;Toolkit&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2 class="section-title"&gt;Technical Skills&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="skills-grid"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="skill-group"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="skill-group-title"&gt;Programming&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="skill-tags"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;Python&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;C++&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;C&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;ROOT&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;MATLAB&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;LaTeX&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;Shell Scripting&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="skill-group"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="skill-group-title"&gt;Machine Learning&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="skill-tags"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;TensorFlow&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;Scikit-learn&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;UNet / Res-UNet&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;Mask R-CNN&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;Tree-based NNs&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;GPU Programming&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;Parallel Computing&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="skill-group"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="skill-group-title"&gt;Image Processing&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="skill-tags"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;OpenCV&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;Scikit-image&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;PIL&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;sCMOS Analysis&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;Track Reconstruction&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="skill-group"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="skill-group-title"&gt;Detector &amp; Physics&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="skill-tags"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;GEM Detectors&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;TPC&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;Geant4 / FUSE&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;PMT Waveforms&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;Negative Ion Drift&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;γ-ray Spectroscopy&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;Noble Liquids&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="skill-group"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="skill-group-title"&gt;Operating Systems&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="skill-tags"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;Linux&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;macOS&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;Windows&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="skill-group"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="skill-group-title"&gt;Experiments&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="skill-tags"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;XENONnT&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;CYGNO / INITIUM&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;DareDevil&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;LIME Detector&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="skill-tag"&gt;MANGO Detector&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="section-divider"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- AWARDS --&gt;</p>
+<p class="p1">&lt;section id="awards"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="wrap"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="section-header"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="section-tag"&gt;Recognition&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2 class="section-title"&gt;Awards &amp;amp; Fellowships&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="award-card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="award-icon"&gt;🏆&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="award-title"&gt;Wenner-Gren Fellowship for Foreign Researchers&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="award-sub"&gt;Awarded to join Stockholm University (July 2026) within the XENONnT collaboration. Prestigious Swedish foundation fellowship supporting international scientific exchange.&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="award-card"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="award-icon"&gt;🥇&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="award-title"&gt;Best Poster Award — ACAT-2021&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="award-sub"&gt;20th International Workshop on Advanced Computing and Analysis Techniques in Physics Research, Daejeon, South Korea (December 2021). Poster: &lt;em&gt;Reconstruction and Particle Identification with CYGNO experiment.&lt;/em&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="section-divider"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- TALKS --&gt;</p>
+<p class="p1">&lt;section id="talks"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="wrap"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="section-header"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="section-tag"&gt;Presentations&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2 class="section-title"&gt;Selected Talks &amp;amp; Posters&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="talks-list"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;a href="https://indico.in2p3.fr/event/35255/contributions/161615/" target="_blank" class="talk-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="talk-date"&gt;Nov 2025&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="talk-title"&gt;XENONnT latest results and updates&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="talk-venue"&gt;2nd International Conference on the Physics of the Two Infinities — Tokyo, Japan&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;a href="https://agenda.infn.it/event/33457/contributions/207010/" target="_blank" class="talk-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="talk-date"&gt;Sep 2023&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="talk-title"&gt;The CYGNO project for directional Dark Matter searches&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="talk-venue"&gt;TeV Particle Astrophysics (TeVPA) — Napoli, Italy&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;a href="https://agenda.infn.it/event/34526/contributions/192115/" target="_blank" class="talk-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="talk-date"&gt;Mar 2023&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="talk-title"&gt;Reconstruction and Particle Identification with CYGNO Using Machine Learning&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="talk-venue"&gt;ML@INFN: Machine Learning activities at INFN Roma — Rome, Italy&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;a href="https://agenda.infn.it/event/33483/contributions/187351/" target="_blank" class="talk-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="talk-date"&gt;Dec 2022&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="talk-title"&gt;Rejecting Electron Background using Machine Learning algorithms&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="talk-venue"&gt;CYGNO Collaboration Meeting — Rome, Italy&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;a href="http://vietnam.in2p3.fr/2023/tmex/transparencies/ParallelS1/" target="_blank" class="talk-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="talk-date"&gt;Jan 2023&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="talk-title"&gt;The CYGNO experiment: A directional Dark Matter detector with optical readout&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="talk-venue"&gt;19th Rencontres du Vietnam (TMEX) — Quy Nhon, Vietnam&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;a href="https://indico.cern.ch/event/855454/contributions/4596531/" target="_blank" class="talk-item"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="talk-date"&gt;Dec 2021&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="talk-title"&gt;Reconstruction and Particle Identification with CYGNO experiment &lt;span style="color:var(--secondary);font-size:0.78rem;margin-left:6px"&gt;🏆 Best Poster&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="talk-venue"&gt;ACAT-2021 — Daejeon, South Korea&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="section-divider"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- CONTACT --&gt;</p>
+<p class="p1">&lt;section id="contact"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="wrap"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="section-header"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="section-tag"&gt;Get In Touch&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2 class="section-title"&gt;Let's Connect&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="contact-layout"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="contact-text"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>I'm always open to discussions on dark matter detection, gaseous and noble-liquid detectors,</p>
+<p class="p1"><span class="Apple-converted-space">          </span>machine learning for particle physics, or potential collaborations.</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>Whether you're from academia, a fellow physicist, or just curious about the dark universe —</p>
+<p class="p1"><span class="Apple-converted-space">          </span>feel free to reach out.</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;a href="CV_Atul.pdf" target="_blank" class="btn-primary" style="display:inline-flex;margin-top:8px"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>↓ Download Full CV</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="contact-links"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;a href="mailto:atulashok.prajapati@univaq.it" class="contact-link"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="cl-icon"&gt;✉️&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div style="font-weight:500"&gt;Email&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div style="font-size:0.82rem;color:var(--muted)"&gt;atulashok.prajapati@univaq.it&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;a href="https://www.researchgate.net/profile/Atul-Prajapati-2" target="_blank" class="contact-link"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="cl-icon"&gt;🔬&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div style="font-weight:500"&gt;ResearchGate&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div style="font-size:0.82rem;color:var(--muted)"&gt;Atul-Prajapati-2&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;a href="CV_Atul.pdf" target="_blank" class="contact-link"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="cl-icon"&gt;📄&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div style="font-weight:500"&gt;Curriculum Vitae&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div style="font-size:0.82rem;color:var(--muted)"&gt;Full CV — PDF&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/a&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="contact-link" style="cursor:default"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="cl-icon"&gt;📍&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div style="font-weight:500"&gt;Location&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div style="font-size:0.82rem;color:var(--muted)"&gt;L'Aquila, Italy · → Stockholm, Jul 2026&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div class="section-divider"&gt;&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;footer&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;span&gt;© 2026 Atul Ashok Prajapati · Astroparticle Physics&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;span&gt;XENONnT · DareDevil · CYGNO/INITIUM&lt;/span&gt;</p>
+<p class="p1">&lt;/footer&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;!-- PARTICLE CANVAS --&gt;</p>
+<p class="p1">&lt;script&gt;</p>
+<p class="p1">const canvas = document.getElementById('c');</p>
+<p class="p1">const ctx = canvas.getContext('2d');</p>
+<p class="p2"><br></p>
+<p class="p1">function resize() {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>canvas.width = window.innerWidth;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>canvas.height = window.innerHeight;</p>
+<p class="p1">}</p>
+<p class="p1">resize();</p>
+<p class="p1">window.addEventListener('resize', resize);</p>
+<p class="p2"><br></p>
+<p class="p1">const N = 140;</p>
+<p class="p1">const particles = Array.from({length: N}, () =&gt; ({</p>
+<p class="p1"><span class="Apple-converted-space">  </span>x: Math.random() * window.innerWidth,</p>
+<p class="p1"><span class="Apple-converted-space">  </span>y: Math.random() * window.innerHeight,</p>
+<p class="p1"><span class="Apple-converted-space">  </span>vx: (Math.random() - .5) * .35,</p>
+<p class="p1"><span class="Apple-converted-space">  </span>vy: (Math.random() - .5) * .35,</p>
+<p class="p1"><span class="Apple-converted-space">  </span>r: Math.random() * 1.5 + .5,</p>
+<p class="p1"><span class="Apple-converted-space">  </span>hue: Math.random() &gt; .6 ? 190 : 260</p>
+<p class="p1">}));</p>
+<p class="p2"><br></p>
+<p class="p1">function draw() {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>ctx.clearRect(0, 0, canvas.width, canvas.height);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>particles.forEach(p =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>p.x += p.vx;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>p.y += p.vy;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if (p.x &lt; 0 || p.x &gt; canvas.width) p.vx *= -1;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if (p.y &lt; 0 || p.y &gt; canvas.height) p.vy *= -1;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>ctx.beginPath();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>ctx.fillStyle = p.hue === 190 ? 'rgba(109,229,255,0.7)' : 'rgba(167,139,250,0.6)';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>ctx.fill();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>for (let i = 0; i &lt; N; i++) {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>for (let j = i + 1; j &lt; N; j++) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const dx = particles[i].x - particles[j].x;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const dy = particles[i].y - particles[j].y;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const d = Math.sqrt(dx * dx + dy * dy);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if (d &lt; 110) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const a = (1 - d / 110) * 0.3;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>ctx.beginPath();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>ctx.moveTo(particles[i].x, particles[i].y);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>ctx.lineTo(particles[j].x, particles[j].y);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>ctx.strokeStyle = `rgba(143,124,255,${a})`;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>ctx.lineWidth = 0.4;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>ctx.stroke();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>requestAnimationFrame(draw);</p>
+<p class="p1">}</p>
+<p class="p1">draw();</p>
+<p class="p1">&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
 </body>
 </html>
