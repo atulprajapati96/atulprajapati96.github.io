@@ -1,40 +1,590 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Atul Prajapati | Postdoctoral Researcher</title>
-    <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f4; color: #333; }
-        header { background: #0055A2; color: #fff; padding: 20px 0; text-align: center; }
-        .container { width: 80%; margin: auto; overflow: hidden; padding: 20px; background: #fff; margin-top: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h1 { margin: 0; }
-        a { color: #0055A2; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Atul Prajapati | Astroparticle Physics Research</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+    --bg:#050816;
+    --card:rgba(255,255,255,0.08);
+    --border:rgba(255,255,255,0.12);
+    --primary:#6de5ff;
+    --secondary:#8f7cff;
+    --text:#f5f7fa;
+    --muted:#aab4c4;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    scroll-behavior:smooth;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+}
+
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:-2;
+}
+
+.gradient{
+    position:fixed;
+    inset:0;
+    background:
+    radial-gradient(circle at 20% 30%, rgba(109,229,255,.15), transparent 30%),
+    radial-gradient(circle at 80% 70%, rgba(143,124,255,.15), transparent 30%);
+    z-index:-1;
+}
+
+nav{
+    position:fixed;
+    width:100%;
+    top:0;
+    backdrop-filter:blur(20px);
+    background:rgba(5,8,22,.5);
+    border-bottom:1px solid var(--border);
+    z-index:100;
+}
+
+.nav-container{
+    max-width:1400px;
+    margin:auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px 40px;
+}
+
+.logo{
+    font-size:1.4rem;
+    font-weight:700;
+    color:var(--primary);
+}
+
+nav ul{
+    display:flex;
+    gap:30px;
+    list-style:none;
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    transition:.3s;
+}
+
+nav a:hover{
+    color:var(--primary);
+}
+
+section{
+    max-width:1400px;
+    margin:auto;
+    padding:120px 40px;
+}
+
+.hero{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+}
+
+.hero-content{
+    max-width:900px;
+}
+
+.hero h1{
+    font-size:4rem;
+    line-height:1.1;
+    margin-bottom:20px;
+}
+
+.highlight{
+    background:linear-gradient(90deg,var(--primary),var(--secondary));
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.hero p{
+    color:var(--muted);
+    font-size:1.2rem;
+    line-height:1.8;
+    margin-bottom:30px;
+}
+
+.btn{
+    display:inline-block;
+    padding:14px 30px;
+    border-radius:40px;
+    text-decoration:none;
+    color:white;
+    border:1px solid rgba(255,255,255,.15);
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(10px);
+    transition:.3s;
+}
+
+.btn:hover{
+    transform:translateY(-4px);
+    box-shadow:0 0 25px rgba(109,229,255,.3);
+}
+
+.section-title{
+    font-size:2.5rem;
+    margin-bottom:50px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+    gap:25px;
+}
+
+.card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:30px;
+    backdrop-filter:blur(20px);
+    transition:.4s;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    border-color:var(--primary);
+}
+
+.card h3{
+    margin-bottom:15px;
+    color:var(--primary);
+}
+
+.card p{
+    color:var(--muted);
+    line-height:1.7;
+}
+
+.skills{
+    display:flex;
+    flex-wrap:wrap;
+    gap:15px;
+}
+
+.skill{
+    padding:10px 18px;
+    border-radius:30px;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);
+}
+
+.timeline{
+    border-left:2px solid rgba(255,255,255,.2);
+    margin-left:20px;
+}
+
+.timeline-item{
+    position:relative;
+    margin-bottom:40px;
+    padding-left:35px;
+}
+
+.timeline-item::before{
+    content:"";
+    position:absolute;
+    left:-9px;
+    top:8px;
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    background:var(--primary);
+    box-shadow:0 0 15px var(--primary);
+}
+
+.timeline h3{
+    color:var(--primary);
+    margin-bottom:10px;
+}
+
+.contact{
+    text-align:center;
+}
+
+.contact p{
+    color:var(--muted);
+    margin-bottom:20px;
+}
+
+footer{
+    text-align:center;
+    padding:40px;
+    color:var(--muted);
+}
+
+@media(max-width:768px){
+
+.hero h1{
+    font-size:2.6rem;
+}
+
+.nav-container{
+    flex-direction:column;
+    gap:15px;
+}
+
+nav ul{
+    gap:15px;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+}
+
+</style>
 </head>
+
 <body>
-    <header>
-        <h1>Dr. Atul Prajapati</h1>
-        <p>Postdoctoral Researcher | University of L'Aquila | XENONnT Experiment</p>
-    </header>
 
-    <div class="container">
-        <h2>About Me</h2>
-        <p>Hello! I am a Postdoctoral Researcher at the <strong>University of L'Aquila</strong> in Italy. My research primarily focuses on dark matter direct detection, and I am a proud member of the <strong>XENONnT experiment</strong> at the Gran Sasso National Laboratory (LNGS).</p>
-        
-        <h2>Research Interests</h2>
-        <ul>
-            <li>Dark Matter Direct Detection</li>
-            <li>Particle Astro-physics</li>
-            <li>Rare Event Searches (XENONnT)</li>
-        </ul>
+<canvas id="darkMatterCanvas"></canvas>
+<div class="gradient"></div>
 
-        <h2>Contact & Links</h2>
-        <p>
-            Email: <a href="mailto:your.email@example.com">your.email@example.com</a><br>
-            GitHub: <a href="https://github.com/atulprajapati96">github.com/atulprajapati96</a>
-        </p>
-    </div>
+<nav>
+<div class="nav-container">
+<div class="logo">Atul Prajapati</div>
+
+<ul>
+<li><a href="#about">About</a></li>
+<li><a href="#research">Research</a></li>
+<li><a href="#skills">Skills</a></li>
+<li><a href="#timeline">Journey</a></li>
+<li><a href="#contact">Contact</a></li>
+</ul>
+</div>
+</nav>
+
+<section class="hero">
+
+<div class="hero-content">
+
+<h1>
+Exploring the
+<span class="highlight">Dark Universe</span>
+Through Astroparticle Physics & Machine Learning
+</h1>
+
+<p>
+Ph.D. Researcher at Gran Sasso Science Institute (GSSI), Italy.
+My work focuses on Dark Matter Detection, Negative Ion Drift,
+TPC detectors, Machine Learning for particle track reconstruction,
+and advanced image-based event reconstruction techniques.
+</p>
+
+<a href="#research" class="btn">Explore Research</a>
+
+</div>
+
+</section>
+
+<section id="about">
+
+<h2 class="section-title">About Me</h2>
+
+<div class="card">
+
+<p>
+I am a Ph.D. researcher in Astroparticle Physics working on
+advanced gaseous detectors for directional dark matter searches.
+My research combines detector development, signal processing,
+computer vision, and machine learning to reconstruct particle
+tracks in three dimensions using camera and PMT data.
+
+I actively contribute to detector R&D activities at LNGS,
+including studies involving electroluminescence, GEM-based
+amplification systems, negative ion drift gases, and
+next-generation dark matter experiments.
+</p>
+
+</div>
+
+</section>
+
+<section id="research">
+
+<h2 class="section-title">Research Interests</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>Dark Matter Detection</h3>
+<p>
+Directional dark matter searches, low-background detectors,
+TPC technologies, and rare event detection.
+</p>
+</div>
+
+<div class="card">
+<h3>MANGO Detector</h3>
+<p>
+3D reconstruction using sCMOS imaging and PMT waveforms.
+Electroluminescence studies and negative ion drift operation.
+</p>
+</div>
+
+<div class="card">
+<h3>Machine Learning</h3>
+<p>
+Track reconstruction, computer vision, deep learning,
+particle identification, and detector optimization.
+</p>
+</div>
+
+<div class="card">
+<h3>Detector Physics</h3>
+<p>
+GEM detectors, gas mixtures, amplification systems,
+signal characterization and detector calibration.
+</p>
+</div>
+
+<div class="card">
+<h3>Image Processing</h3>
+<p>
+Advanced analysis of detector images for extracting
+physical observables and event topology.
+</p>
+</div>
+
+<div class="card">
+<h3>Scientific Computing</h3>
+<p>
+Python, ROOT, Geant4 simulations, data analysis,
+and high-performance computing workflows.
+</p>
+</div>
+
+</div>
+
+</section>
+
+<section id="skills">
+
+<h2 class="section-title">Technical Skills</h2>
+
+<div class="skills">
+
+<div class="skill">Python</div>
+<div class="skill">Machine Learning</div>
+<div class="skill">Deep Learning</div>
+<div class="skill">ROOT</div>
+<div class="skill">Geant4</div>
+<div class="skill">C++</div>
+<div class="skill">Computer Vision</div>
+<div class="skill">Detector Physics</div>
+<div class="skill">Astroparticle Physics</div>
+<div class="skill">Dark Matter</div>
+<div class="skill">Signal Processing</div>
+<div class="skill">Data Analysis</div>
+
+</div>
+
+</section>
+
+<section id="timeline">
+
+<h2 class="section-title">Research Journey</h2>
+
+<div class="timeline">
+
+<div class="timeline-item">
+<h3>Ph.D. Research — GSSI, Italy</h3>
+<p>
+Astroparticle Physics focusing on directional dark matter detection
+and machine learning-based track reconstruction.
+</p>
+</div>
+
+<div class="timeline-item">
+<h3>LNGS Detector Development</h3>
+<p>
+Operation and characterization of MANGO detector,
+electroluminescence studies, GEM optimization,
+and negative ion drift investigations.
+</p>
+</div>
+
+<div class="timeline-item">
+<h3>Machine Learning Applications</h3>
+<p>
+Developing advanced reconstruction algorithms combining
+camera images and PMT signals for 3D particle tracking.
+</p>
+</div>
+
+</div>
+
+</section>
+
+<section id="publications">
+
+<h2 class="section-title">Selected Projects & Publications</h2>
+
+<div class="grid">
+
+<div class="card">
+<h3>3D Track Reconstruction</h3>
+<p>
+Combining sCMOS imaging and PMT waveform information
+for directional event reconstruction.
+</p>
+</div>
+
+<div class="card">
+<h3>Negative Ion Drift Studies</h3>
+<p>
+Investigation of gas mixtures and amplification structures
+for stable detector operation.
+</p>
+</div>
+
+<div class="card">
+<h3>Electroluminescence Optimization</h3>
+<p>
+Characterization of light production mechanisms for
+enhanced detector sensitivity.
+</p>
+</div>
+
+</div>
+
+</section>
+
+<section id="contact" class="contact">
+
+<h2 class="section-title">Let's Connect</h2>
+
+<p>
+Interested in detector physics, dark matter detection,
+or machine learning applications in particle physics?
+</p>
+
+<a href="mailto:your.email@example.com" class="btn">
+Contact Me
+</a>
+
+</section>
+
+<footer>
+© 2025 Atul Prajapati • Astroparticle Physics Research
+</footer>
+
+<script>
+
+const canvas = document.getElementById("darkMatterCanvas");
+const ctx = canvas.getContext("2d");
+
+let particles = [];
+
+function resize(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+resize();
+
+window.addEventListener("resize",resize);
+
+class Particle{
+    constructor(){
+        this.x=Math.random()*canvas.width;
+        this.y=Math.random()*canvas.height;
+
+        this.vx=(Math.random()-0.5)*0.5;
+        this.vy=(Math.random()-0.5)*0.5;
+
+        this.r=Math.random()*2+1;
+    }
+
+    update(){
+
+        this.x+=this.vx;
+        this.y+=this.vy;
+
+        if(this.x<0||this.x>canvas.width) this.vx*=-1;
+        if(this.y<0||this.y>canvas.height) this.vy*=-1;
+
+    }
+
+    draw(){
+
+        ctx.beginPath();
+        ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+
+        ctx.fillStyle="rgba(109,229,255,0.8)";
+        ctx.fill();
+
+    }
+}
+
+for(let i=0;i<180;i++){
+    particles.push(new Particle());
+}
+
+function animate(){
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    particles.forEach(p=>{
+
+        p.update();
+        p.draw();
+
+    });
+
+    for(let i=0;i<particles.length;i++){
+
+        for(let j=i+1;j<particles.length;j++){
+
+            let dx=particles[i].x-particles[j].x;
+            let dy=particles[i].y-particles[j].y;
+
+            let dist=Math.sqrt(dx*dx+dy*dy);
+
+            if(dist<120){
+
+                ctx.beginPath();
+                ctx.moveTo(particles[i].x,particles[i].y);
+                ctx.lineTo(particles[j].x,particles[j].y);
+
+                ctx.strokeStyle=
+                `rgba(143,124,255,${1-dist/120})`;
+
+                ctx.lineWidth=0.4;
+                ctx.stroke();
+            }
+        }
+    }
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+</script>
+
 </body>
 </html>
